@@ -8,9 +8,9 @@ from google import genai        # conversa com a IA do Google (Gemini)
 from google.genai import types  # configurações da IA
 
 # ---------- 1. CONFIGURAÇÕES ----------
-# Nome do modelo de IA. Se der erro de "modelo não encontrado",
-# troque por outro modelo gratuito, por exemplo "gemini-3.1-flash-lite".
-MODELO = "gemini-3.5-flash"
+# Lista de modelos de IA. O tutor tenta o primeiro;
+# se ele estiver ocupado, tenta o próximo da lista.
+MODELOS = ["gemini-3.5-flash", "gemini-3.1-flash-lite"]
 
 # Este texto é o "jeito de ser" do tutor.
 # EXPERIMENTE MUDAR e veja como as respostas mudam!
@@ -37,17 +37,41 @@ st.caption("Pergunte qualquer coisa sobre Python. Eu explico bem devagar!")
 # ---------- 3. LIGANDO A IA ----------
 # A chave fica guardada em "segredos", nunca dentro do código.
 chave = st.secrets["GEMINI_API_KEY"]
+cliente = genai.Client(api_key=chave)
 
 # st.session_state é a "memória" da página.
-# Criamos a ligação com a IA e a conversa só uma vez, na primeira visita.
-# (Guardamos o cliente na memória para a ligação não "cair" entre as perguntas.)
-if "conversa" not in st.session_state:
-    st.session_state.cliente = genai.Client(api_key=chave)
-    st.session_state.conversa = st.session_state.cliente.chats.create(
-        model=MODELO,
-        config=types.GenerateContentConfig(system_instruction=PERSONALIDADE),
-    )
+# Criamos a lista de mensagens só uma vez, na primeira visita.
+if "mensagens" not in st.session_state:
     st.session_state.mensagens = []  # lista com tudo que já foi dito
+
+
+def perguntar_para_ia(mensagens):
+    """Envia a conversa inteira para a IA e devolve a resposta."""
+    # A IA chama o aluno de "user" e a si mesma de "model"
+    conversa = []
+    for mensagem in mensagens:
+        papel = "user" if mensagem["quem"] == "user" else "model"
+        conversa.append({"role": papel, "parts": [{"text": mensagem["texto"]}]})
+
+    ultimo_erro = None
+    for modelo in MODELOS:  # tenta um modelo de cada vez
+        try:
+            resposta = cliente.models.generate_content(
+                model=modelo,
+                contents=conversa,
+                config=types.GenerateContentConfig(system_instruction=PERSONALIDADE),
+            )
+            return resposta.text  # deu certo: devolve e para por aqui
+        except Exception as erro:
+            ultimo_erro = erro    # deu errado: guarda o erro e tenta o próximo
+
+    # Se chegou aqui, nenhum modelo respondeu
+    return (
+        "Ops, não consegui responder agora. "
+        "Espere um minutinho e tente de novo.\n\n"
+        f"Detalhe técnico: `{ultimo_erro}`"
+    )
+
 
 # ---------- 4. MOSTRANDO O HISTÓRICO ----------
 for mensagem in st.session_state.mensagens:
@@ -65,15 +89,8 @@ if pergunta:
 
     # Pede a resposta para a IA
     with st.chat_message("assistant"):
-        try:
-            with st.spinner("Pensando..."):
-                resposta = st.session_state.conversa.send_message(pergunta).text
-        except Exception as erro:
-            resposta = (
-                "Ops, não consegui responder agora. "
-                "Espere um minutinho e tente de novo.\n\n"
-                f"Detalhe técnico: `{erro}`"
-            )
+        with st.spinner("Pensando..."):
+            resposta = perguntar_para_ia(st.session_state.mensagens)
         st.markdown(resposta)
 
     # Guarda a resposta no histórico
