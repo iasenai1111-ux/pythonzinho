@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pythonzinho - Tutor de Python com IA</title>
+  <style>
+    :root { --azul: #1f4e79; --amarelo: #ffd43b; --fundo: #f6f8fb; --texto: #1c2733; }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: "Segoe UI", Arial, sans-serif; background: var(--fundo); color: var(--texto); line-height: 1.6; }
+    header { background: var(--azul); color: #fff; text-align: center; padding: 56px 16px 64px; }
+    header .cobra { font-size: 64px; }
+    header h1 { margin: 8px 0; font-size: 2.4rem; }
+    header p { margin: 0 auto 28px; max-width: 520px; font-size: 1.1rem; opacity: .92; }
+    .botao { display: inline-block; background: var(--amarelo); color: #1c2733; font-weight: 700; text-decoration: none; padding: 14px 28px; border-radius: 10px; font-size: 1.1rem; }
+    .botao:hover { filter: brightness(.95); }
+    .link-git { display: block; margin-top: 16px; color: #fff; }
+    main { max-width: 820px; margin: 0 auto; padding: 32px 16px 56px; }
+    h2 { color: var(--azul); margin-top: 40px; }
+    .cartoes { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 14px; }
+    .cartao { background: #fff; border-radius: 12px; padding: 18px; border: 1px solid #dde4ee; }
+    .cartao b { display: block; color: var(--azul); margin-bottom: 4px; }
+    .exemplo { background: #fff; border-left: 5px solid var(--amarelo); border-radius: 8px; padding: 16px 20px; }
+    pre { background: #1c2733; color: #e8eef5; padding: 16px; border-radius: 10px; overflow-x: auto; font-size: .95rem; }
+    ol li, ul li { margin-bottom: 6px; }
+    footer { text-align: center; padding: 24px 16px; color: #5b6b7c; font-size: .9rem; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="cobra">🐍</div>
+    <h1>Pythonzinho</h1>
+    <p>O tutor com inteligência artificial que explica Python tão simples que até uma criança entende.</p>
+    <a class="botao" href="https://pythonzinho.streamlit.app" target="_blank">Abrir o Pythonzinho</a>
+    <a class="link-git" href="https://github.com/iasenai1111-ux/pythonzinho" target="_blank">Ver o código no GitHub</a>
+  </header>
+
+  <main>
+    <h2>Como ele responde</h2>
+    <div class="cartoes">
+      <div class="cartao"><b>1. Em uma frase</b>A explicação mais curta possível.</div>
+      <div class="cartao"><b>2. É como...</b>Uma comparação com o dia a dia.</div>
+      <div class="cartao"><b>3. Exemplo</b>Um código curto e comentado.</div>
+      <div class="cartao"><b>4. Sua vez</b>Um mini desafio para praticar.</div>
+    </div>
+
+    <h2>Experimente perguntar</h2>
+    <div class="exemplo">
+      <ul>
+        <li>O que é uma variável?</li>
+        <li>Para que serve o <code>if</code>?</li>
+        <li>O que é uma lista?</li>
+        <li>Qual a diferença entre <code>for</code> e <code>while</code>?</li>
+        <li>O que é uma função?</li>
+      </ul>
+    </div>
+
+    <h2>Quer rodar no seu computador?</h2>
+    <ol>
+      <li>Baixe o projeto pelo GitHub.</li>
+      <li>Instale as bibliotecas.</li>
+      <li>Crie sua chave gratuita no Google AI Studio.</li>
+      <li>Rode o aplicativo.</li>
+    </ol>
+<pre>pip install -r requirements.txt
+streamlit run tutor.py</pre>
+    <p>O passo a passo completo está no README do repositório.</p>
+
+    <h2>Desafios para a turma</h2>
+    <ul>
+      <li>Faça o tutor explicar tudo usando futebol.</li>
+      <li>Adicione um botão "Limpar conversa".</li>
+      <li>Salve as perguntas em um arquivo de texto.</li>
+    </ul>
+  </main>
+
+  <footer>Projeto didático de Python com IA para iniciantes.</footer>
+
+</body>
+</html>
