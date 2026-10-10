@@ -37,12 +37,13 @@ st.caption("Pergunte qualquer coisa sobre Python. Eu explico bem devagar!")
 # ---------- 3. LIGANDO A IA ----------
 # A chave fica guardada em "segredos", nunca dentro do código.
 chave = st.secrets["GEMINI_API_KEY"]
-cliente = genai.Client(api_key=chave)
 
 # st.session_state é a "memória" da página.
-# Criamos a conversa só uma vez, na primeira visita.
+# Criamos a ligação com a IA e a conversa só uma vez, na primeira visita.
+# (Guardamos o cliente na memória para a ligação não "cair" entre as perguntas.)
 if "conversa" not in st.session_state:
-    st.session_state.conversa = cliente.chats.create(
+    st.session_state.cliente = genai.Client(api_key=chave)
+    st.session_state.conversa = st.session_state.cliente.chats.create(
         model=MODELO,
         config=types.GenerateContentConfig(system_instruction=PERSONALIDADE),
     )
